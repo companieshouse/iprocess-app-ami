@@ -1,0 +1,21 @@
+---
+
+- name: Bring up docker containers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    inventory:
+      - name: iprocess-app
+        image: "geerlingguy/docker-centos8-ansible"
+        # The network setting allows for idempotent testing.
+        # without it the role creates a brand new container, with it the container is re-used.
+        network_mode: bridge
+        provision_docker_volumes: 
+          - /lib/modules:/lib/modules
+          - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  roles:
+    - role: provision_docker
+      provision_docker_inventory: "{{ inventory }}"
+      provision_docker_privileged: True
+
+- import_playbook: ../playbook.yml

@@ -1,0 +1,75 @@
+---
+# Check or create users and groups
+
+- name: Create user groups
+  group:
+    name: '{{ item.group }}'
+    gid: '{{ item.gid }}'
+    state: present
+  with_items: '{{ users }}'
+
+- name: Create users
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.group | default(omit) }}"
+    create_home: "{{ item.create_home | default('yes') }}"
+    state: present
+  loop: "{{ users }}"
+
+# Set SELinux in permissive
+- name: Set SELinux to permissive
+  ansible.posix.selinux:
+    policy: "{{ item.policy | default(omit) }}"
+    state: "{{ item.state }}"
+  with_items: "{{ selinux_status }}"
+
+# Copy jinja template over to be populated at build time
+- name: Copy TNS Names template to correct location
+  copy:
+    src: tnsnames.j2
+    dest: "{{ app_user_home_path }}tnsnames.j2"
+
+# Configure the bash profile for the user
+- name: Ensure env variables are set in app user home path
+  lineinfile:
+    path: "{{ app_user_home_path }}/.bash_profile"
+    line: '{{ item.value }}'
+  loop: "{{ env_vars | dict2items }}"
+  
+# Update local postfix to use mail relay
+- name: Update Postfix configuration for mail relay (existing commented lines)
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_main_config_file }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^#{{ item.key }} ="
+    insertafter: "^#{{ item.key }} ="
+  with_items: "{{ postfix_config }}"
+
+- name: Update Postfix network config (existing uncommented lines)
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_main_config_file }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^{{ item.key }} ="
+  with_items: "{{ postfix_net_config }}"
+
+# Prepare AMI for auotmated builds
+- name: Copy deployment scripts to server for later use
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ansible_deploy_playbook_directory }}/{{ item | basename}}"
+    mode: 0755
+  loop:
+    - deployment-scripts/iprocess_app_deployment.yml
+
+- name: Setup deployment playbook dependancies (1/2) 
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ansible_deploy_playbook_directory }}/"
+    mode: 0755
+  loop: 
+    - requirements.yml
+
+- name: Setup deployment playbook dependancies (2/2)
+  command: "/usr/local/bin/ansible-galaxy install -f -r {{ansible_deploy_playbook_directory}}/requirements.yml"
+  register: requirements_output
+  changed_when: '"was installed successfully" in requirements_output.stdout'

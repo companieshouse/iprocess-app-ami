@@ -1,0 +1,17 @@
+---
+ansible_deploy_playbook_directory: "/root"
+
+postfix_main_config_file: main.cf
+postfix_config:
+  - key: mydomain
+    value: default.local
+  - key: myorigin 
+    value: $mydomain
+  - key: relayhost
+    value: myrelay.local
+
+postfix_net_config:
+  - key: inet_interfaces 
+    value: all
+  - key: inet_protocols 
+    value: ipv4

@@ -1,1 +1,9 @@
----
+---  
+- hosts: iprocess-app
+  become: true
+  gather_facts: yes
+  roles:
+    - ch_collections.base.os_package_control
+    - ch_collections.base.nagios_nrpe_client
+    - ch_collections.heritage_services.nfs
+    - iprocess-app

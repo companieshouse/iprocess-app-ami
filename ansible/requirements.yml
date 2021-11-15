@@ -1,1 +1,12 @@
 ---
+collections:
+  - name: git@github.com:companieshouse/ansible-collections.git#/ch_collections/base/
+    version: 0.1.88
+    type: git
+
+  - name: git@github.com:companieshouse/ansible-collections.git#/ch_collections/heritage_services/
+    version: 0.1.88
+    type: git
+
+  - name: ansible.posix
+    version: 1.1.1

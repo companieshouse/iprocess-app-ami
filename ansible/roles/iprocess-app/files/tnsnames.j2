@@ -1,0 +1,11 @@
+{% for db in tnsnames %}{{ db.name }} = 
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ db.address }})(PORT = {{ db.port }}))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = {{ db.service_name }})
+      (SERVER = DEDICATED)
+    )
+  )
+{% endfor %}

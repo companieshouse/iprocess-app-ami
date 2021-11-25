@@ -27,7 +27,7 @@
 - name: Copy TNS Names template to correct location
   copy:
     src: tnsnames.j2
-    dest: "{{ app_user_home_path }}tnsnames.j2"
+    dest: "{{ app_user_home_path }}/tnsnames.j2"
 
 # Configure the bash profile for the user
 - name: Ensure env variables are set in app user home path
@@ -51,25 +51,3 @@
     line: "{{ item.key }} = {{ item.value }}"
     regexp: "^{{ item.key }} ="
   with_items: "{{ postfix_net_config }}"
-
-# Prepare AMI for auotmated builds
-- name: Copy deployment scripts to server for later use
-  copy:
-    src: "{{ item }}"
-    dest: "{{ ansible_deploy_playbook_directory }}/{{ item | basename}}"
-    mode: 0755
-  loop:
-    - deployment-scripts/iprocess_app_deployment.yml
-
-- name: Setup deployment playbook dependancies (1/2) 
-  copy:
-    src: "{{ item }}"
-    dest: "{{ ansible_deploy_playbook_directory }}/"
-    mode: 0755
-  loop: 
-    - requirements.yml
-
-- name: Setup deployment playbook dependancies (2/2)
-  command: "/usr/local/bin/ansible-galaxy install -f -r {{ansible_deploy_playbook_directory}}/requirements.yml"
-  register: requirements_output
-  changed_when: '"was installed successfully" in requirements_output.stdout'

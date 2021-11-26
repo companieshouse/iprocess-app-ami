@@ -1,0 +1,26 @@
+{{ oracle_std_sid }} = 
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ db_address }})(PORT = {{ db_port }}))
+    )
+    (CONNECT_DATA =
+      (SERVICE_NAME = {{ service_name }})
+      (SERVER = DEDICATED)
+    )
+  )
+
+{{ oracle_taf_sid }} =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ db_address }})(PORT = {{ db_port }}))
+    )
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SID = {{ oracle_std_sid }})
+      (FAILOVER_MODE =
+            (TYPE = SELECT)
+            (METHOD = BASIC)
+            (BACKUP = {{ oracle_taf_sid }})
+      )
+     )
+   ) 

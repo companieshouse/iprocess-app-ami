@@ -1,0 +1,46 @@
+---
+# Check or create users and groups
+
+- name: Create user groups
+  group:
+    name: '{{ item.group | default(item.name)}}'
+    gid: '{{ item.gid | default(omit)}}'
+    state: present
+  with_items: '{{ users }}'
+
+- name: Create users
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.group | default(omit) }}"
+    create_home: "{{ item.create_home | default('yes') }}"
+    state: present
+  loop: "{{ users }}"
+
+# Set SELinux in permissive
+- name: Set SELinux to permissive
+  ansible.posix.selinux:
+    policy: "{{ item.policy | default(omit) }}"
+    state: "{{ item.state }}"
+  with_items: "{{ selinux_status }}"
+
+# Copy jinja template over to be populated at build time
+- name: Copy TNS Names template to correct location
+  copy:
+    src: tnsnames.j2
+    dest: "{{ app_user_home_path }}/tnsnames.j2"
+
+# Update local postfix to use mail relay
+- name: Update Postfix configuration for mail relay (existing commented lines)
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_main_config_file }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^#{{ item.key }} ="
+    insertafter: "^#{{ item.key }} ="
+  with_items: "{{ postfix_config }}"
+
+- name: Update Postfix network config (existing uncommented lines)
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_main_config_file }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    regexp: "^{{ item.key }} ="
+  with_items: "{{ postfix_net_config }}"

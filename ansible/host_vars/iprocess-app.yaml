@@ -1,0 +1,84 @@
+---
+## Add any additional packages
+additional_packages:
+  - postfix
+
+pip_install_packages:
+  - name: pip
+    state: latest
+  - name: ansible
+    version: "2.10.7"
+  - name: j2cli
+    umask: "0022"
+
+# Selinux setup
+selinux_status:
+  - policy: targeted
+    state: permissive
+
+# User vars
+app_user_home_path: /home/swenvp1
+
+users:
+  - name: swenvp1
+
+## NFS Options
+install_watcher_service: true
+
+## Postfix Outbound email
+postfix_main_config_file: main.cf
+postfix_config:
+  - key: mydomain
+    value: companieshouse.gov.uk
+  - key: myorigin
+    value: $mydomain
+  - key: relayhost
+    value: smtp-outbound.sharedservices.aws.internal
+
+postfix_net_config:
+  - key: inet_interfaces
+    value: all
+  - key: inet_protocols
+    value: ipv4
+
+## Nagios Variables
+auto_register_client: true
+nagios_host: nagios.sharedservices.aws.internal
+server_template_name: !unsafe "{{ REPLACE }}" ## Gets replaced at Terraform level via userdata
+nrpe_allowed_hosts:
+  - "127.0.0.1"
+  - "10.44.12.0/24"
+  - "10.44.13.0/24"
+  - "10.44.14.0/24"
+nrpe_plugin_packages:
+  - nagios-plugins-nrpe
+  - nagios-plugins
+  - nagios-plugins-disk
+nrpe_config:
+  dont_blame_nrpe: 1
+nrpe_command:
+  check_disk:
+    script: check_disk
+    option: $ARG1$
+  check_load:
+    script: check_load
+    option: $ARG1$
+  check_sshd:
+    sudo: true
+    script: check_service.sh
+    option: $ARG1$
+  check_crond:
+    sudo: true
+    script: check_service.sh
+    option: $ARG1$
+  check_httpd:
+    sudo: true
+    script: check_service.sh
+    option: $ARG1$
+  check_syslogd:
+    sudo: true
+    script: check_service.sh
+    option: $ARG1$
+  check_users:
+    script: check_users
+    option: $ARG1$

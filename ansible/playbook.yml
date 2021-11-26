@@ -1,1 +1,22 @@
----
+---  
+- hosts: iprocess-app
+  become: true
+  gather_facts: yes
+  roles:
+    - ch_collections.base.os_package_control
+    - ch_collections.base.nagios_nrpe_client
+    - ch_collections.heritage_services.nfs
+    - iprocess-app
+  tasks:
+    - name: Copy Deployment files to host
+      copy:
+        src: "{{ item }}"
+        dest: "{{ ansible_deploy_playbook_directory }}/{{ item | basename}}"
+        mode: 0755
+      with_fileglob:
+        - "deployment/*"
+
+    - name: Setup deployment playbook dependancies (2/2)
+      command: "/usr/local/bin/ansible-galaxy install -f -r {{ansible_deploy_playbook_directory}}/requirements.yml"
+      register: requirements_output
+      changed_when: '"was installed successfully" in requirements_output.stdout'

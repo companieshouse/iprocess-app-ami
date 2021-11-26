@@ -1,0 +1,13 @@
+---
+- name: Pre-setup for local testing
+  hosts: iprocess-app
+  become: true
+  pre_tasks:
+  - name: Prereq - Setup Centos8 PowerTools repo
+    lineinfile:
+      path: /etc/yum.repos.d/CentOS-Linux-PowerTools.repo
+      regexp: '^enabled=.*$'
+      line: 'enabled=1'
+      state: present
+
+- import_playbook: ../../playbook.yml

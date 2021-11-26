@@ -1,6 +1,6 @@
-# ami-repository-template
+# Staffware iProcess AMI
 
-Provides a base template for Packer and Ansible based AMI builds.
+Staffware iProcess AMI based on RHEL 8 using hand built iProcess-App-0.2 AMI.
 
 ### Packer Variables
 All Packer configuration resides in the `./packer` directory and utilises standard Packer configuration syntax.

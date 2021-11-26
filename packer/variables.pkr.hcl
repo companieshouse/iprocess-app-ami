@@ -29,7 +29,7 @@ variable "aws_region" {
 
 variable "aws_source_ami_filter_name" {
   type        = string
-  default     = "iprocess-app-02"
+  default     = "iprocess-app-0"
   description = "The source AMI filter string. Any filter described by the DescribeImages API documentation is valid. If multiple images match then the latest will be used. This will be suffixed with a version number, or * if no version is provided"
 }
 
@@ -41,7 +41,7 @@ variable "aws_source_ami_filter_version" {
 
 variable "aws_source_ami_owner_id" {
   type        = string
-  default     = "self"
+  default     = "300288021642"
   description = "The source AMI owner ID; used in combination with aws_source_ami_filter_name to filter for matching source AMIs"
 }
 

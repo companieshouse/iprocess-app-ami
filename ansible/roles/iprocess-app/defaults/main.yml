@@ -1,11 +1,10 @@
 ---
 # User vars
-app_user_home_path: /home/iprocess
+app_user_home_path: /home/swenvp1
 
 users:
-  - name: iprocess
-    group: iprocess
-    gid: 600
+  - name: swenvp1
+    group: swenvp1
 
 ansible_deploy_playbook_directory: "/root"
 

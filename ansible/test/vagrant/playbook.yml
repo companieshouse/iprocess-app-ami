@@ -11,8 +11,11 @@
       state: present
   - name: Install EPEL
     package:
-      name: epel-release
+      name: "{{ item }}"
       state: present
+    loop:
+      - epel-release
+      - git
       
 - import_playbook: ../../playbook.yml
 

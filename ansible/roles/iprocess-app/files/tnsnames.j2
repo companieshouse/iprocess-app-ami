@@ -1,11 +1,26 @@
-{% for db in tnsnames %}{{ db.name }} = 
+{{ oracle_std_sid }} = 
   (DESCRIPTION =
     (ADDRESS_LIST =
-      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ db.address }})(PORT = {{ db.port }}))
+      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ db_address }})(PORT = {{ db_port }}))
     )
     (CONNECT_DATA =
-      (SERVICE_NAME = {{ db.service_name }})
+      (SERVICE_NAME = {{ service_name }})
       (SERVER = DEDICATED)
     )
   )
-{% endfor %}
+
+{{ oracle_taf_sid }} =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = {{ db_address }})(PORT = {{ db_port }}))
+    )
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SID = {{ oracle_std_sid }})
+      (FAILOVER_MODE =
+            (TYPE = SELECT)
+            (METHOD = BASIC)
+            (BACKUP = {{ oracle_taf_sid }})
+      )
+     )
+   ) 

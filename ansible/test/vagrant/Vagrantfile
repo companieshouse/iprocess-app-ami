@@ -9,9 +9,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: <<-SHELL
     sudo dnf update
-    sudo dnf install python38
-    python3 -m pip install --upgrade pip --user
-    python3 -m pip  install ansible --user
+    sudo dnf install python38 -y
+    python3 -m pip install ansible
   SHELL
 
   config.vm.provision "ansible" do |ansible|

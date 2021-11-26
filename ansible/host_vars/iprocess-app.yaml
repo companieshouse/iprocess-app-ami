@@ -1,24 +1,13 @@
 ---
 ## Add any additional packages
 additional_packages:
-  - nfs-utils
-  - iscsi-initiator-utils
-  - device-mapper-multipath
-  - sg3_utils
-  - git
-  - python3-libselinux
-  - python3-libsemanage
-  - python3-policycoreutils
-  - screen
-  - logrotate
-  - python3-pip
   - postfix
 
 pip_install_packages:
   - name: pip
     state: latest
   - name: ansible
-    version: "2.10.6"
+    version: "2.10.7"
   - name: j2cli
     umask: "0022"
 
@@ -28,20 +17,10 @@ selinux_status:
     state: permissive
 
 # User vars
-app_user_home_path: /home/iprocess
+app_user_home_path: /home/swenvp1
 
 users:
-  - name: iprocess
-    group: iprocess
-    gid: 600
-
-## Environment Variables
-env_vars:
-  LD_LIBRARY_PATH: export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib/
-  TNS_ADMIN: export TNS_ADMIN=/usr/lib/oracle/11.2/client64/lib/
-  LANG: export LANG='en_US.UTF-8'
-  LC_ALL: export LC_ALL='en_US.UTF-8'
-
+  - name: swenvp1
 
 ## NFS Options
 install_watcher_service: true

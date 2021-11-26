@@ -3,8 +3,8 @@
 
 - name: Create user groups
   group:
-    name: '{{ item.group }}'
-    gid: '{{ item.gid }}'
+    name: '{{ item.group | default(item.name)}}'
+    gid: '{{ item.gid | default(omit)}}'
     state: present
   with_items: '{{ users }}'
 
@@ -29,13 +29,6 @@
     src: tnsnames.j2
     dest: "{{ app_user_home_path }}/tnsnames.j2"
 
-# Configure the bash profile for the user
-- name: Ensure env variables are set in app user home path
-  lineinfile:
-    path: "{{ app_user_home_path }}/.bash_profile"
-    line: '{{ item.value }}'
-  loop: "{{ env_vars | dict2items }}"
-  
 # Update local postfix to use mail relay
 - name: Update Postfix configuration for mail relay (existing commented lines)
   lineinfile:

@@ -5,17 +5,17 @@
   collections:
     - ch_collections.base
   vars:
-    app_user_home_path: "{{ USER_HOME }}"
+    app_user_home_path: "/home/swenvp1"
     eaiJavaSettings:
       - key: eaijava.db_connection
-        value: "{{ EAI_DB_CONNECTION }}"
+        value: "jdbc:oracle:thin:@{{ ORACLE_SID_VALUE }}"
       - key: eaijava.db_user
         value: "{{ EAI_DB_USER }}"
       - key: eaijava.db_password
         value: "{{ EAI_DB_PASS }}"
       - key: eaijava.db_schemaowner
-        value: "{{ EAI_DB_SCHEMEOWNER }}"
-    staffwareToJave:
+        value: "{{ EAI_DB_SCHEMAOWNER }}"
+    staffwareToJava:
       - key: computerName
         value: "{{ HOSTNAME }}"
       - key: tcpPort
@@ -61,8 +61,13 @@
           regexp: "(^{{ item.key }}=)(.*)$"
         with_items: "{{ staffwareToJave }}"
 
+      # REPLACE LINE AND REGEXP WITH CORRECT SETTING
+      - name: Add Oracle SID to iprocess app settings
+        lineinfile:
+          path: "/app/iProcess/11_8/etc/staffpms"
+          line: "item={{ ORACLE_SID_VALUE }}"
+          regexp: "(^item=)(.*)$"
 
-
-        
+      
 
   

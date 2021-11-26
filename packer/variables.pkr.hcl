@@ -29,13 +29,13 @@ variable "aws_region" {
 
 variable "aws_source_ami_filter_name" {
   type        = string
-  default     = "iprocess-app-02"
+  default     = "iprocess-app"
   description = "The source AMI filter string. Any filter described by the DescribeImages API documentation is valid. If multiple images match then the latest will be used. This will be suffixed with a version number, or * if no version is provided"
 }
 
 variable "aws_source_ami_filter_version" {
   type        = string
-  default     = "*"
+  default     = "02"
   description = "The source AMI filter version. Used to enable control of version of source AMI from CI triggers."
 }
 

@@ -1,7 +1,8 @@
 ---  
-- hosts: iprocess-app
+- name: Deployment
+  hosts: localhost
+  gather_facts: true
   become: true
-  gather_facts: yes
   collections:
     - ch_collections.base
   vars:
@@ -21,53 +22,53 @@
       - key: tcpPort
         value: "{{ APP_TCP_PORT }}"
       - key: ipAddress
-        value: "{{ ansible_facts['ansible_default_ipv4']['address'] }}"
+        value: "{{ ansible_facts['all_ipv4_addresses'][0] }}"
   roles:
     - role: /root/roles/nfs_mounts
       when: mounts is defined
     - name: ch_collections.base.cloudwatch_agent_config
       when: cw_log_files is defined or cw_collect_metrics is defined
   tasks:
-    tasks: 
-      - name: Set Hostname (1/2)
-        ansible.builtin.lineinfile:
-          line: "{{ item }} {{ HOSTNAME }}.{{ DOMAIN }} {{ HOSTNAME }}"
-          regex: "^{{ item | regex_escape() }}.*$"
-          path: "/etc/hosts"
-        loop:
-          - "{{ ansible_facts['all_ipv4_addresses'] }}"
+    - name: Set Hostname (1/2)
+      ansible.builtin.lineinfile:
+        line: "{{ item }} {{ HOSTNAME }}.{{ DOMAIN }} {{ HOSTNAME }}"
+        regex: "^{{ item | regex_escape() }}.*$"
+        path: "/etc/hosts"
+      loop:
+        - "{{ ansible_facts['all_ipv4_addresses'] }}"
 
-      - name: Set Hostname (2/2)
-        ansible.builtin.hostname:
-          name: "{{ HOSTNAME }}.{{ DOMAIN }}"
-          strategy: systemd
+    - name: Set Hostname (2/2)
+      ansible.builtin.hostname:
+        name: "{{ HOSTNAME }}.{{ DOMAIN }}"
+        use: systemd
 
-      - name: Set ORACLE_SID environment variable
-        lineinfile:
-          path: "{{ app_user_home_path }}/.bash_profile"
-          line: "ORACLE_SID={{ ORACLE_SID_VALUE }}"
+    - name: Set ORACLE_SID environment variable
+      lineinfile:
+        path: "{{ app_user_home_path }}/.bash_profile"
+        line: "ORACLE_SID={{ ORACLE_SID_VALUE }}"
 
-      - name: Setup EAI Java Plugin
-        lineinfile:
-          path: "/app/iProcess/11_8/eaijava/eaijavaplugin.properties"
-          line: "{{ item.key }}={{ item.value }}"
-          regexp: "(^{{ item.key }}=)(.*)$"
-        with_items: "{{ eaiJavaSettings }}"
+    - name: Setup EAI Java Plugin
+      lineinfile:
+        path: "/app/iProcess/11_8/eaijava/eaijavaplugin.properties"
+        line: "{{ item.key }}={{ item.value }}"
+        regexp: "(^{{ item.key }}=)(.*)$"
+      with_items: "{{ eaiJavaSettings }}"
 
-      - name: Setup StaffwareToJava Properties
-        lineinfile:
-          path: "/app/iProcess/11_8/eaijava/libs/repository/user/staffwareToJava.properties"
-          line: "{{ item.key }}={{ item.value }}"
-          regexp: "(^{{ item.key }}=)(.*)$"
-        with_items: "{{ staffwareToJave }}"
+    - name: Setup StaffwareToJava Properties
+      lineinfile:
+        path: "/app/iProcess/11_8/eaijava/libs/repository/user/staffwareToJava.properties"
+        line: "{{ item.key }}={{ item.value }}"
+        regexp: "(^{{ item.key }}=)(.*)$"
+      with_items: "{{ staffwareToJava }}"
 
-      # REPLACE LINE AND REGEXP WITH CORRECT SETTING
-      - name: Add Oracle SID to iprocess app settings
-        lineinfile:
-          path: "/app/iProcess/11_8/etc/staffpms"
-          line: "item={{ ORACLE_SID_VALUE }}"
-          regexp: "(^item=)(.*)$"
+    - name: Add Oracle SID to iprocess app settings
+      lineinfile:
+        path: "/app/iProcess/11_8/etc/staffpms"
+        line: "3\\swpro\\swuser\\swpro\\{{ ORACLE_SID_VALUE }}\\10\\0"
+        regexp: "^3\\swpro\\swuser\\swpro"
 
-      
-
-  
+    - name: Add Oracle SID to iprocess app settings
+      replace:
+        path: "/app/iProcess/11_8/etc/staffpms"
+        replace: '3\\swpro\\swuser\\swpro\\{{ ORACLE_SID_VALUE }}\\10\\0'
+        regexp: '(^3\\swpro\\swuser\\swpro)(.*)$'

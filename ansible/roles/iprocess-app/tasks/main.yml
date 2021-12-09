@@ -16,6 +16,18 @@
     state: present
   loop: "{{ users }}"
 
+# Enable cron and disable password expiry for users
+- name: Enable crontab for EWF user
+  lineinfile:
+    dest: "/etc/cron.allow"
+    line: "{{ item.name }}"
+    regexp: "^{{ item.name }}"
+  loop: "{{ users }}" 
+
+- name: Disable password expiry for users so it doesnt break cron
+  command: "chage -m 0 -M 99999 -I -1 -E -1 {{ item.name }}"
+  loop: "{{ users }}" 
+
 # Set SELinux in permissive
 - name: Set SELinux to permissive
   ansible.posix.selinux:

@@ -72,3 +72,6 @@
         path: "/app/iProcess/11_8/etc/staffpms"
         replace: '3\\swpro\\swuser\\swpro\\{{ ORACLE_SID_VALUE }}\\10\\0'
         regexp: '(^3\\swpro\\swuser\\swpro)(.*)$'
+
+    - name: Run iprocess RMI Daemon
+      command: sh /app/iProcess/11_8/runSSO.sh

@@ -56,3 +56,5 @@
     line: "{{ item.key }} = {{ item.value }}"
     regexp: "^{{ item.key }} ="
   with_items: "{{ postfix_net_config }}"
+
+- import_tasks: hotfixes.yml

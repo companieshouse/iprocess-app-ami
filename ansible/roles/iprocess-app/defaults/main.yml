@@ -6,6 +6,8 @@ users:
   - name: swenvp1
     group: swenvp1
 
+staffware_directory: /app/iProcess/11_8
+
 ansible_deploy_playbook_directory: "/root"
 
 postfix_main_config_file: main.cf

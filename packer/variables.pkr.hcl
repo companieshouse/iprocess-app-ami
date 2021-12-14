@@ -29,13 +29,13 @@ variable "aws_region" {
 
 variable "aws_source_ami_filter_name" {
   type        = string
-  default     = "iprocess-app"
+  default     = "iprocess-base-ami"
   description = "The source AMI filter string. Any filter described by the DescribeImages API documentation is valid. If multiple images match then the latest will be used. This will be suffixed with a version number, or * if no version is provided"
 }
 
 variable "aws_source_ami_filter_version" {
   type        = string
-  default     = "02"
+  default     = "0.1.1"
   description = "The source AMI filter version. Used to enable control of version of source AMI from CI triggers."
 }
 
@@ -48,11 +48,6 @@ variable "aws_source_ami_owner_id" {
 variable "aws_subnet_filter_name" {
   type        = string
   description = "The subnet filter string. Any filter described by the DescribeSubnets API documentation is valid. If multiple subnets match then the one with the most IPv4 addresses free will be used"
-}
-
-variable "aws_s3_release_bucket" {
-  type        = string
-  description = "Bucket that contains any artifacts required to complete the build process, will be passed to Ansible"
 }
 
 variable "playbook_file_path" {
@@ -100,4 +95,21 @@ variable "nagios_api_key" {
   type        = string
   default     = ""
   description = "This key will be supplied to the Nagios agent Ansible role to populate jinja templates"
+}
+
+variable "aws_s3_release_bucket" {
+  type        = string
+  description = "Bucket that contains any artifacts required to complete the build process, will be passed to Ansible"
+}
+
+variable "aws_s3_release_bucket_access_key" {
+  type        = string
+  description = "The AWS Access Key that allows access to the resource bucket"
+  default     = ""
+}
+
+variable "aws_s3_release_bucket_secret_key" {
+  type        = string
+  description = "The AWS Secret Key that allows access to the resource bucket"
+  default     = ""
 }

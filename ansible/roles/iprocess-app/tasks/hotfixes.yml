@@ -1,0 +1,31 @@
+# ---
+# - name: "Download and install hotfix 11.8.0_HF-001"
+#   block:
+#     - name: Copy files
+#       amazon.aws.aws_s3:
+#         bucket: "{{ aws_s3_release_bucket }}"
+#         object: "chips/iprocess/hotfixes/TIB_ip-tech-pi_11.8.0_HF-001_linux_x86_64.zip"
+#         dest: "/tmp/TIB_ip-tech-pi_11.8.0_HF-001_linux_x86_64.zip"
+#         mode: get
+#         aws_access_key: "{{ aws_s3_release_bucket_access_key | default(omit) }}"
+#         aws_secret_key: "{{ aws_s3_release_bucket_secret_key | default(omit) }}"
+
+#     - name: Unarchive files 
+#       ansible.builtin.unarchive:
+#         remote_src: yes
+#         src: "/tmp/TIB_ip-tech-pi_11.8.0_HF-001_linux_x86_64.zip"
+#         dest: "/tmp/"
+
+#     - name: Overwrite local files with hotfixes
+#       ansible.builtin.copy:
+#         remote_src: yes
+#         src: "/tmp/TIB_ip-tech-pi_11.8.0_HF-001_linux_x86_64/{{ item.name }}"
+#         dest: "{{ staffware_directory }}/{{ item.dest }}"
+#         owner: swenvp1
+#         group: staffwar
+#         mode: '0550'
+#       loop: 
+#         - { name: tiblog.jar, dest: jar/tp/tiblog.jar }
+#         - { name: tiblog.jar, dest: eaijava/libs/bootstrap/tiblog.jar }
+#         - { name: bootstrap.jar, dest: eaijava/libs/bootstrap/bootstrap.jar }
+#   when: ansible_virtualization_type != "docker"

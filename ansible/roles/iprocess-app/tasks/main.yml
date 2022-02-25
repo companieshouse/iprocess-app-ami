@@ -35,11 +35,14 @@
     state: "{{ item.state }}"
   with_items: "{{ selinux_status }}"
 
-# Copy jinja template over to be populated at build time
+# Copy jinja templates over to be populated at build time
 - name: Copy TNS Names template to correct location
   copy:
-    src: tnsnames.j2
-    dest: "{{ app_user_home_path }}/tnsnames.j2"
+    src: "{{ item }}"
+    dest: "{{ app_user_home_path }}/{{ item }}"
+  loop:
+    - tnsnames.j2
+    - staff_dat.j2
 
 # Update local postfix to use mail relay
 - name: Update Postfix configuration for mail relay (existing commented lines)
@@ -57,4 +60,4 @@
     regexp: "^{{ item.key }} ="
   with_items: "{{ postfix_net_config }}"
 
-- import_tasks: hotfixes.yml
+  /app/iProcess/11_8/staff.dat

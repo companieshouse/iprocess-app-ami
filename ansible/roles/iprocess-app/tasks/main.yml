@@ -59,5 +59,3 @@
     line: "{{ item.key }} = {{ item.value }}"
     regexp: "^{{ item.key }} ="
   with_items: "{{ postfix_net_config }}"
-
-  /app/iProcess/11_8/staff.dat

@@ -67,10 +67,10 @@
         replace: '3\\swpro\\swuser\\swpro\\{{ ORACLE_SID_VALUE }}\\10\\0'
         regexp: '(^3\\swpro\\swuser\\swpro)(.*)$'
 
-    - name: Download scripts and cronfile
-      ansible.builtin.git:
-        repo: https://{{ GIT_TOKEN }}@github.com/{{ GIT_USER }}/companieshouse/chips-service-admin<repo_name>.git
-        dest: /src/from-private-repo
-
     - name: Run iprocess RMI Daemon
       command: sh /app/iProcess/11_8/runSSO.sh
+
+    # - name: Download scripts and cronfile
+    #   ansible.builtin.git:
+    #     repo: https://{{ GIT_TOKEN }}@github.com/{{ GIT_USER }}/companieshouse/chips-service-admin<repo_name>.git
+    #     dest: /src/from-private-repo

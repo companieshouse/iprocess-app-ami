@@ -69,6 +69,8 @@
 
     - name: Run iprocess RMI Daemon
       command: sh /app/iProcess/11_8/runSSO.sh
+      become: yes
+      become_user: "{{ app_user_home_path | basename }}"
 
     # - name: Download scripts and cronfile
     #   ansible.builtin.git:

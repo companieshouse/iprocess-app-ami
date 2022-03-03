@@ -57,8 +57,8 @@
     - name: Setup StaffwareToJava Properties
       lineinfile:
         path: "/app/iProcess/11_8/eaijava/libs/repository/user/staffwareToJava.properties"
-        line: "{{ item.key }} = {{ item.value }}"
-        regexp: "(^{{ item.key }} = )(.*)$"
+        line: "{{ item.key }}={{ item.value }}"
+        regexp: "(^{{ item.key }}=)(.*)$"
       with_items: "{{ staffwareToJava }}"
 
     - name: Add Oracle SID to iprocess app settings

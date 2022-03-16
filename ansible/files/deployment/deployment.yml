@@ -6,6 +6,7 @@
   collections:
     - ch_collections.base
   vars:
+    ansible_remote_tmp: "/tmp"
     app_user_home_path: "/home/swenvp1"
     eaiJavaSettings:
       - key: eaijava.db_connection
@@ -68,11 +69,8 @@
         regexp: '(^3\\swpro\\swuser\\swpro)(.*)$'
 
     - name: Run iprocess RMI Daemon
-      command: sh /app/iProcess/11_8/runSSO.sh
+      shell: sh /app/iProcess/11_8/runSSO.sh
       become: yes
+      become_method: su
+      become_flags: "--login"
       become_user: "{{ app_user_home_path | basename }}"
-
-    # - name: Download scripts and cronfile
-    #   ansible.builtin.git:
-    #     repo: https://{{ GIT_TOKEN }}@github.com/{{ GIT_USER }}/companieshouse/chips-service-admin<repo_name>.git
-    #     dest: /src/from-private-repo

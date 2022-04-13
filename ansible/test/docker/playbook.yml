@@ -1,13 +1,32 @@
 ---
-- name: Pre-setup for local testing
-  hosts: iprocess-app
-  become: true
-  pre_tasks:
-  - name: Prereq - Setup Centos8 PowerTools repo
-    lineinfile:
-      path: /etc/yum.repos.d/CentOS-Linux-PowerTools.repo
-      regexp: '^enabled=.*$'
-      line: 'enabled=1'
-      state: present
-
-- import_playbook: ../../playbook.yml
+  - name: Bring up docker containers
+    hosts: localhost
+    gather_facts: false
+    vars:
+      inventory:
+        - name: iprocess-app
+          image: "rockylinux:8.5"
+          network_mode: bridge
+          provision_docker_volumes: 
+            - /lib/modules:/lib/modules
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    roles:
+      - role: provision_docker
+        provision_docker_inventory: "{{ inventory }}"
+        provision_docker_privileged: True
+        check_mode: no
+  
+  - hosts: iprocess-app
+    become: true
+    gather_facts: yes
+    pre_tasks:
+      - name: Enable Rocky Linux Power Tools Repo
+        ini_file:
+          path: /etc/yum.repos.d/Rocky-PowerTools.repo
+          section: powertools
+          option: enabled
+          value: "1"
+        check_mode: no
+  
+  - import_playbook: ../../playbook.yml
+  

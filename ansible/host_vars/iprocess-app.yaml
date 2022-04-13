@@ -3,6 +3,8 @@
 additional_packages:
   - postfix
   - jq
+
+remove_packages:
   - awscli
   
 additional_packages_pip:

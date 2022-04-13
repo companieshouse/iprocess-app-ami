@@ -5,7 +5,7 @@ additional_packages:
   - jq
   - awscli
   
-pip_install_packages:
+additional_packages_pip:
   - name: pip
     state: latest
   - name: boto3

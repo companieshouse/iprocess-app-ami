@@ -75,6 +75,13 @@
         replace: 'echo "{{ swpro_password }}"'
         regexp: '^echo "password"$'
 
+    - name: Download the crontab schedule from S3
+      aws_s3:
+        bucket: "{{ s3_bucket_configs }}"
+        object: "iprocess-configs/crontab.txt"
+        dest: "/app/iProcess/11_8/crontab.txt"
+        mode: get
+
     - name: Run iprocess RMI Daemon
       shell: sh /app/iProcess/11_8/bin/bootstrap.sh
       become: yes

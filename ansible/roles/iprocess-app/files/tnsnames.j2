@@ -6,6 +6,10 @@
     (CONNECT_DATA =
       (SERVICE_NAME = {{ service_name }})
       (SERVER = DEDICATED)
+      (FAILOVER_MODE =
+            (TYPE = SELECT)
+            (METHOD = BASIC)
+      )
     )
   )
 

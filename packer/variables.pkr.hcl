@@ -116,7 +116,7 @@ variable "aws_s3_release_bucket_secret_key" {
 
 variable "swap_volume_device_node" {
   type        = string
-  default     = "/dev/nvme2n1"
+  default     = "/dev/xvdf"
   description = "The device node identifier for the swap volume"
 }
 

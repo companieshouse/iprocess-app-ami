@@ -18,6 +18,17 @@ source "amazon-ebs" "builder" {
     delete_on_termination = true
   }
 
+  dynamic "launch_block_device_mappings" {
+    for_each = var.swap_volume_size_gb > 0 ? [1] : []
+
+    content {
+      device_name = var.swap_volume_device_node
+      volume_size = var.swap_volume_size_gb
+      volume_type = "gp2"
+      delete_on_termination = true
+    }
+  }
+
   security_group_filter {
     filters = {
       "group-name": "packer-builders-${var.aws_region}"

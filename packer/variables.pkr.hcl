@@ -113,3 +113,15 @@ variable "aws_s3_release_bucket_secret_key" {
   description = "The AWS Secret Key that allows access to the resource bucket"
   default     = ""
 }
+
+variable "swap_volume_device_node" {
+  type        = string
+  default     = "/dev/xvdb"
+  description = "The device node identifier for the swap volume"
+}
+
+variable "swap_volume_size_gb" {
+  type        = number
+  default     = 5
+  description = "The EC2 instance swap volume size in Gibibytes (GiB); set to 0 to disable swap volume"
+}

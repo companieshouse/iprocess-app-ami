@@ -11,7 +11,7 @@ build {
       "-e", "aws_s3_release_bucket=${var.aws_s3_release_bucket}",
       "-e", "aws_s3_release_bucket_access_key=${var.aws_s3_release_bucket_access_key}",
       "-e", "aws_s3_release_bucket_secret_key=${var.aws_s3_release_bucket_secret_key}",            
-      "-e", "nagios_api_key=${var.nagios_api_key}"
+      "-e", "nagios_api_key=${var.nagios_api_key}",
       "-e", "swap_volume_device_node=${var.swap_volume_device_node}",
       "-e", "swap_volume_enabled=${var.swap_volume_size_gb > 0 ? true : false}"
     ]

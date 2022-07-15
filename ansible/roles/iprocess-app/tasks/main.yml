@@ -61,15 +61,15 @@
   with_items: "{{ postfix_net_config }}"
 
 # Setting swap
-# - name: Format swap volume
-#   command: "mkswap {{ swap_volume_device_node }}"
-#   when: swap_volume_enabled | bool
+- name: Format swap volume
+  command: "mkswap /dev/nvme1n1"
+  when: swap_volume_enabled | bool
 
-# - name: Add swap volume to filesystem table
-#   mount:
-#     path: swap
-#     src: "{{ swap_volume_device_node }}"
-#     fstype: swap
-#     opts: defaults
-#     state: present
-#   when: swap_volume_enabled | bool
+- name: Add swap volume to filesystem table
+  mount:
+    path: swap
+    src: "/dev/nvme1n1"
+    fstype: swap
+    opts: defaults
+    state: present
+  when: swap_volume_enabled | bool

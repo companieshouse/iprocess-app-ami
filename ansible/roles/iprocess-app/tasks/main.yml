@@ -62,13 +62,13 @@
 
 # Setting swap
 - name: Format swap volume
-  command: "mkswap {{ swap_volume_device_node }}"
+  command: "mkswap /dev/nvme1n1"
   when: swap_volume_enabled | bool
 
 - name: Add swap volume to filesystem table
   mount:
     path: swap
-    src: "{{ swap_volume_device_node }}"
+    src: /dev/nvme1n1
     fstype: swap
     opts: defaults
     state: present

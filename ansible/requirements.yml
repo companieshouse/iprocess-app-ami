@@ -1,5 +1,8 @@
 ---
 collections:
+  - name: https://github.com/companieshouse/ansible-role-aws-nvme-device-files
+    type: git
+    version: 1.1.0
   - name: https://github.com/companieshouse/ansible-collections.git#/ch_collections/heritage_services/
     type: git
     version: 0.1.89

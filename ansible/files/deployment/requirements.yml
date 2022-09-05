@@ -1,5 +1,5 @@
 ---
 collections:
   - name: https://github.com/companieshouse/ansible-collections.git#ch_collections/base
-    version: 0.1.112
+    version: 0.1.113
     type: git

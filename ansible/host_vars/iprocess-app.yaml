@@ -14,6 +14,8 @@ additional_packages_pip:
     state: latest
   - name: awscli
     state: latest
+  - name: requests
+    state: latest
   - name: ansible
     version: "2.10.6"
   - name: j2cli

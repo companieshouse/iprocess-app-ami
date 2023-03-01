@@ -13,6 +13,10 @@ additional_packages_pip:
     version: "2.10.6"
   - name: j2cli
     umask: "0022"
+  - name: urllib3
+    state: latest
+  - name: requests
+    state: latest
 
 # Selinux setup
 selinux_status:

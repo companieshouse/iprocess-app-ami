@@ -3,20 +3,11 @@
 additional_packages:
   - postfix
   - jq
-
-remove_packages:
-  - awscli
-  
+ 
 additional_packages_pip:
   - name: pip
     state: latest
   - name: boto3
-    state: latest
-  - name: urllib3
-    state: latest
-  - name: awscli
-    state: latest
-  - name: requests
     state: latest
   - name: ansible
     version: "2.10.6"

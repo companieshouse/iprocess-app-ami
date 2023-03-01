@@ -7,8 +7,6 @@ additional_packages:
 additional_packages_pip:
   - name: pip
     state: latest
-  - name: boto3
-    state: latest
   - name: ansible
     version: "2.10.6"
   - name: j2cli

@@ -1,4 +1,7 @@
 ---
+
+update_os: false
+
 ## Add any additional packages
 additional_packages:
   - postfix

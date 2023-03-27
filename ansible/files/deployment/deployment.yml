@@ -78,7 +78,7 @@
     - name: Download the crontab schedule from S3
       aws_s3:
         bucket: "{{ s3_bucket_configs }}"
-        object: "iprocess-configs/crontab.txt"
+        object: "iprocess-configs/{{ crontab_filename | default('crontab.txt') }}"
         dest: "/app/iProcess/11_8/crontab.txt"
         mode: get
 

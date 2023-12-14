@@ -1,6 +1,6 @@
 ---
 
-update_os: false
+update_os: true
 
 ## Add any additional packages
 additional_packages:

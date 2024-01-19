@@ -24,7 +24,7 @@ source "amazon-ebs" "builder" {
     content {
       device_name = var.swap_volume_device_node
       volume_size = var.swap_volume_size_gb
-      volume_type = "gp2"
+      volume_type = "gp3"
       delete_on_termination = true
     }
   }

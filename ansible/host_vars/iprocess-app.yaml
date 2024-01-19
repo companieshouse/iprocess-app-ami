@@ -27,7 +27,7 @@ users:
   - name: swenvp1
 
 ## NFS Options
-install_watcher_service: true
+install_watcher_service: false
 
 ## Postfix Outbound email
 postfix_main_config_file: main.cf

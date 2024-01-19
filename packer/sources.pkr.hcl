@@ -16,6 +16,8 @@ source "amazon-ebs" "builder" {
     volume_size = var.root_volume_size_gb
     volume_type = "gp3"
     delete_on_termination = true
+    iops = var.root_volume_iops
+    throughput = var.root_volume_throughput
   }
 
   dynamic "launch_block_device_mappings" {
@@ -26,6 +28,8 @@ source "amazon-ebs" "builder" {
       volume_size = var.swap_volume_size_gb
       volume_type = "gp3"
       delete_on_termination = true
+      iops = var.swap_volume_iops
+      throughput = var.swap_volume_throughput
     }
   }
 

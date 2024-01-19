@@ -62,6 +62,18 @@ variable "root_volume_size_gb" {
   description = "The EC2 instance root volume size in Gibibytes (GiB)"
 }
 
+variable "root_volume_throughput" {
+  type        = number
+  default     = 125
+  description = "The EC2 instance root volume throughput (MiB/s)"
+}
+
+variable "root_volume_iops" {
+  type        = number
+  default     = 3000
+  description = "The EC2 instance root volume IOPS"
+}
+
 variable "ssh_private_key_file" {
   type        = string
   default     = "/home/packer/.ssh/packer-builder"
@@ -124,4 +136,16 @@ variable "swap_volume_size_gb" {
   type        = number
   default     = 5
   description = "The EC2 instance swap volume size in Gibibytes (GiB); set to 0 to disable swap volume"
+}
+
+variable "swap_volume_throughput" {
+  type        = number
+  default     = 125
+  description = "The EC2 instance swap volume throughput (MiB/s)"
+}
+
+variable "swap_volume_iops" {
+  type        = number
+  default     = 3000
+  description = "The EC2 instance swap volume IOPS"
 }

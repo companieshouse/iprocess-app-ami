@@ -93,3 +93,6 @@
     #   ansible.builtin.git:
     #     repo: https://{{ GIT_TOKEN }}@github.com/{{ GIT_USER }}/companieshouse/chips-service-admin<repo_name>.git
     #     dest: /src/from-private-repo
+
+    - name: Remove old packages and kernels
+      ansible.builtin.shell: yum remove --oldinstallonly -y

@@ -25,8 +25,6 @@
       - key: ipAddress
         value: "{{ ansible_facts['all_ipv4_addresses'][0] }}"
   roles:
-    - role: /root/roles/nfs_mounts
-      when: mounts is defined
     - name: ch_collections.base.cloudwatch_agent_config
       when: cw_log_files is defined or cw_collect_metrics is defined
   tasks:

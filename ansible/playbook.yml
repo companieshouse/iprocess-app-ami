@@ -5,6 +5,7 @@
   roles:
     - aws-nvme-device-files
     - ch_collections.base.os_package_control
+    - ch_collections.base.cron_control    
     - iprocess-app
   tasks:
     - name: Copy Deployment files to host

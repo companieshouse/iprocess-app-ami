@@ -10,7 +10,7 @@ collections:
     version: 0.1.89
   - name: https://github.com/companieshouse/ansible-collections.git#/ch_collections/base/
     type: git
-    version: 0.1.112
+    version: 0.1.126
   - name: community.general
     version: 4.8.0
   - name: ansible.posix

@@ -29,4 +29,4 @@ The template provides the following variables to control the Packer build and pr
 ### Ansible
 All Ansible configuration resides in the `./ansible` directory. The Ansble configuration will be called during the provisioning step of the Packer build as defined in `./packer/build.pkr.hcl`.
 
-This template provides the basic code layout and structure only.
+This template provides the basic code layout and structure only

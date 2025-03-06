@@ -73,6 +73,82 @@
         dest: "/app/iProcess/11_8/crontab.txt"
         mode: get
 
+###
+    - name: List objects under S3 prefix using AWS CLI
+      ansible.builtin.command:
+        cmd: aws s3api list-objects-v2 --bucket {{ s3_bucket_configs }} --prefix {{ csi_folder_s3_prefix }}
+      register: s3_objects_raw
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+
+    - name: Parse S3 objects JSON
+      ansible.builtin.set_fact:
+        s3_objects: "{{ s3_objects_raw.stdout | from_json }}"
+
+    - name: Extract S3 keys
+      ansible.builtin.set_fact:
+        s3_keys: "{{ s3_objects.Contents | map(attribute='Key') | list }}"
+
+    - name: Filter out directory markers (keys ending with '/')
+      ansible.builtin.set_fact:
+        filtered_s3_keys: "{{ s3_keys | reject('regex', '.*/$') }}"
+
+    - name: Create local directories (mirror S3 structure)
+      ansible.builtin.file:
+        path: "{{ csi_folder_local_path }}/{{ item | regex_replace('^' + csi_folder_s3_prefix, '') | dirname }}"
+        state: directory
+      loop: "{{ filtered_s3_keys }}"
+      when: filtered_s3_keys | length > 0
+
+    - name: Download files using AWS CLI
+      ansible.builtin.command:
+        cmd: aws s3 cp s3://{{ s3_bucket_configs }}/{{ item }} "{{ csi_folder_local_path }}/{{ item | regex_replace('^' + csi_folder_s3_prefix, '') }}"
+      loop: "{{ filtered_s3_keys }}"
+      when: filtered_s3_keys | length > 0
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+###
+    - name: Set full path to crontab file
+      ansible.builtin.set_fact:
+        swadmin_crontab_file_path: "{{ swadmin_crontab_dir }}/{{ swadmin_crontab_file }}"
+
+    - name: Check if crontab file exists
+      ansible.builtin.stat:
+        path: "{{ swadmin_crontab_file_path }}"
+      register: swadmin_crontab_file_stat
+
+    - name: Ensure crontab file permissions
+      ansible.builtin.file:
+        path: "{{ swadmin_crontab_file_path }}"
+        owner: "{{ swadmin_crontab_user }}"
+        #group: "{{ swadmin_crontab_user }}"
+        mode: '0600'
+      when: swadmin_crontab_file_stat.stat.exists
+
+    - name: Get current crontab
+      ansible.builtin.command: crontab -l
+      become: yes
+      become_user: "{{ swadmin_crontab_user }}"
+      register: current_crontab
+      ignore_errors: yes  # Ignore "no crontab" errors
+      changed_when: false
+      when: swadmin_crontab_file_stat.stat.exists
+
+    - name: Read desired crontab file
+      ansible.builtin.command: cat "{{ swadmin_crontab_file_path }}"
+      register: desired_crontab
+      changed_when: false
+      when: swadmin_crontab_file_stat.stat.exists
+
+    - name: Update crontab if content differs
+      ansible.builtin.command: crontab "{{ swadmin_crontab_file_path }}"
+      become: yes
+      become_user: "{{ swadmin_crontab_user }}"
+      when:
+        - swadmin_crontab_file_stat.stat.exists
+        - current_crontab.stdout != desired_crontab.stdout
+###
+
     - name: Run iprocess RMI Daemon
       shell: sh /app/iProcess/11_8/bin/bootstrap.sh
       become: yes

@@ -143,3 +143,33 @@ variable "swap_volume_iops" {
   default     = 3000
   description = "The EC2 instance swap volume IOPS"
 }
+
+variable "csi_folder_s3_prefix" {
+  type        = string
+  default     = "iprocess-configs/csi-folder/"
+  description = ""
+}
+
+variable "csi_folder_local_path" {
+  type        = string
+  default     = "/app/iProcess/11_8/csi"
+  description = ""
+}
+
+variable "swadmin_crontab_user" {
+  type        = string
+  default     = "swadmin"
+  description = ""
+}
+
+variable "swadmin_crontab_file" {
+  type        = string
+  default     = "crontab-swadmin.txt"
+  description = ""
+}
+
+variable "swadmin_crontab_dir" {
+  type        = string
+  default     = "/app/iProcess/11_8/csi"
+  description = ""
+}

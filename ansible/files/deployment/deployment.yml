@@ -8,6 +8,11 @@
   vars:
     ansible_remote_tmp: "/tmp"
     app_user_home_path: "/home/swenvp1"
+    csi_folder_s3_prefix: "iprocess-configs/csi-folder/"
+    csi_folder_local_path: "/app/iProcess/11_8/csi"
+    swadmin_crontab_user: "swadmin"
+    swadmin_crontab_file: "crontab-swadmin.txt"
+    swadmin_crontab_dir: "/app/iProcess/11_8/csi"
     eaiJavaSettings:
       - key: eaijava.db_connection
         value: "jdbc:oracle:thin:@{{ DB_ADDRESS }}:{{ DB_PORT }}:{{ ORACLE_SID_VALUE }}"

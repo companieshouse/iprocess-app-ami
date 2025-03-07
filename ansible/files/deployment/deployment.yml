@@ -10,6 +10,8 @@
     app_user_home_path: "/home/swenvp1"
     csi_folder_s3_prefix: "iprocess-configs/csi-folder/"
     csi_folder_local_path: "/app/iProcess/11_8/csi"
+    csi_folder_owner: "swenvp1"
+    csi_folder_group: "staffware"
     swadmin_crontab_user: "swadmin"
     swadmin_crontab_file: "crontab-swadmin.txt"
     swadmin_crontab_dir: "/app/iProcess/11_8/csi"
@@ -102,6 +104,9 @@
       ansible.builtin.file:
         path: "{{ csi_folder_local_path }}/{{ item | regex_replace('^' + csi_folder_s3_prefix, '') | dirname }}"
         state: directory
+        owner: "{{ csi_folder_owner }}"
+        group: "{{ csi_folder_group }}"
+        mode: '0755'
       loop: "{{ filtered_s3_keys }}"
       when: filtered_s3_keys | length > 0
 
@@ -112,6 +117,16 @@
       when: filtered_s3_keys | length > 0
       environment:
         PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+      register: downloaded_files
+
+    - name: Set owner, group, and permissions for downloaded files
+      ansible.builtin.file:
+        path: "{{ csi_folder_local_path }}/{{ item.item | regex_replace('^' + csi_folder_s3_prefix, '') }}"
+        owner: "{{ csi_folder_owner }}"
+        group: "{{ csi_folder_group }}"
+        mode: '0644'
+      loop: "{{ downloaded_files.results }}"
+      when: item.changed
 ###
     - name: Set full path to crontab file
       ansible.builtin.set_fact:
